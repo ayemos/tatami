@@ -1,6 +1,6 @@
 import six
 import os
-from multiprocessing import Pool
+from multiprocessing import Process
 import daemon
 
 from boto3 import resource, client
@@ -18,8 +18,7 @@ class S3Downloader(downloader.Downloader):
         self.__data_directory_path = data_directory_path
 
     def download(self, dataset_name, target_dir):
-        with daemon.DaemonContext():
-            self.__download_dir(self.__root_prefix, target_dir)
+        return self.__download_dir(self.__root_prefix, target_dir)
 
     def __download_dir(self, prefix, target_dir, num_threads=4):
         paginator = self.__get_client().get_paginator('list_objects')
@@ -42,7 +41,6 @@ class S3Downloader(downloader.Downloader):
                                 target=self._download_file_for_key,
                                 args=(content.get('Key'), local_file_path))
 
-                        proc.daemon = True
                         proc.start()
 
     def _download_file_for_key(self, key, path):

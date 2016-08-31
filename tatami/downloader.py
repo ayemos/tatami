@@ -9,7 +9,7 @@ class Downloader(object):
         if force and os.path.exists(local_directory_path):
             print('Removing existing local files:', local_directory_path)
 
-            if input("Shall I (Y/n) ") == 'Y':
+            if raw_input("Shall I (Y/n) ") == 'Y':
                 shutil.rmtree(local_directory_path)
 
         if not os.path.exists(local_directory_path):
@@ -17,6 +17,8 @@ class Downloader(object):
             self.download(dataset_name, local_directory_path)
         else:
             print('Using cache:', local_directory_path)
+
+        return local_directory_path
 
     def download(self, dataset_name, target_dir):
         raise NotImplementedError

@@ -14,7 +14,7 @@ class Client(object):
 
     def load_dataset(self, dataset_name, force=False):
         downloader = self._downloader_for_dataset_name(dataset_name)
-        downloader.maybe_download(dataset_name, self.__data_directory_path, force)
+        return downloader.maybe_download(dataset_name, self.__data_directory_path, force)
 
     def get_path_for_dataset(self, dataset_name):
         return "%s/%s" % (self.__data_directory_path, dataset_name)
@@ -26,19 +26,17 @@ class Client(object):
             downloader = S3Downloader(
                     meta_data['bucket_name'],
                     meta_data['prefix'])
-        elif meta_data['type'] == 'RedshiftDataset':
-            downloader = RedshiftDownloader(
-                    )
+        # elif meta_data['type'] == 'RedshiftDataset':
+        #    downloader = RedshiftDownloader(
+        #            )
         else:
             # XXX: HogehogeException
-            raise Exception("Unrecognized host type %s" % meta_data['type'])
+            raise Exception("Unrecognized datasource type %s" % meta_data['type'])
 
         return downloader
 
     def _retrieve_meta_data_for_dataset_name(self, dataset_name):
         # XXX: Not Found Exception
         request_url = "%s/datasets/%s.json" % (self.__tatami_host, dataset_name)
-        print(request_url)
 
         return json.loads(urlopen(request_url).read().decode('utf-8'))
-
