@@ -26,11 +26,7 @@ class Client(object):
             downloader = S3Downloader(
                     meta_data['bucket_name'],
                     meta_data['prefix'])
-        # elif meta_data['type'] == 'RedshiftDataset':
-        #    downloader = RedshiftDownloader(
-        #            )
         else:
-            # XXX: HogehogeException
             raise Exception("Unrecognized datasource type %s" % meta_data['type'])
 
         return downloader
