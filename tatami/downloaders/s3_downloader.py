@@ -1,7 +1,6 @@
 import six
 import os
 from multiprocessing import Process
-import daemon
 
 from boto3 import resource, client
 
